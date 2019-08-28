@@ -3,7 +3,7 @@
 <mapper namespace="com.roncoo.pay.permission.dao.impl.PmsOperatorDaoImpl">
 
 	<!-- Pms权限管理：操作员表 -->
-	<sql id="pms_operator"> PMS_OPERATOR </sql>
+	<sql id="pms_operator"> pms_operator </sql>
 	<sql id="pms_role_operator"> PMS_ROLE_OPERATOR </sql>
 
 	<resultMap id="beanMap" type="com.roncoo.pay.permission.entity.PmsOperator">
@@ -47,7 +47,7 @@
 		real_name = #{realName,jdbcType=VARCHAR},
 		type = #{type,jdbcType=VARCHAR},
 		salt = #{salt,jdbcType=VARCHAR},
-		mobile_no = #{mobileNo,jdbcType=VARCHAR}	
+		mobile_no = #{mobileNo,jdbcType=VARCHAR}
 		</set>
 		<where>
 			id = #{id} and version = #{version}
