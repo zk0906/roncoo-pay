@@ -1,8 +1,10 @@
 /*==============================================================*/
 /* dbms name:      mysql 5.0                                    */
 /* created on:     2016-6-29 18:28:57   www.roncoo.com          */
+/* created on:     2019-8-8  12:00:00   zk          */
 /*==============================================================*/
 
+--删表
 
 drop table if exists rp_account;
 
@@ -620,6 +622,7 @@ INSERT INTO seq_table (SEQ_NAME, CURRENT_VALUE, INCREMENT, REMARK) VALUES ('RECO
 /*==============================================================*/
 /* create function                                              */
 /*==============================================================*/
+DROP FUNCTION if exists FUN_SEQ;
 CREATE FUNCTION `FUN_SEQ`(SEQ VARCHAR(50)) RETURNS BIGINT(20)
 BEGIN
      UPDATE SEQ_TABLE
@@ -628,34 +631,36 @@ BEGIN
      RETURN FUN_SEQ_CURRENT_VALUE(SEQ);
 END;
 
-
+DROP FUNCTION if exists FUN_SEQ_CURRENT_VALUE;
 CREATE FUNCTION `FUN_SEQ_CURRENT_VALUE`(SEQ VARCHAR(50)) RETURNS BIGINT(20)
 BEGIN
     DECLARE VALUE INTEGER;
     SET VALUE=0;
     SELECT CURRENT_VALUE INTO VALUE
-    FROM SEQ_TABLE 
+    FROM SEQ_TABLE
     WHERE SEQ_NAME=SEQ;
     RETURN VALUE;
 END;
 
+DROP FUNCTION if exists FUN_SEQ_SET_VALUE;
 CREATE FUNCTION `FUN_SEQ_SET_VALUE`(SEQ VARCHAR(50), VALUE INTEGER) RETURNS BIGINT(20)
 BEGIN
-     UPDATE SEQ_TABLE 
+     UPDATE SEQ_TABLE
      SET CURRENT_VALUE=VALUE
      WHERE SEQ_NAME=SEQ;
      RETURN FUN_SEQ_CURRENT_VALUE(SEQ);
 END;
 
+DROP FUNCTION if exists FUN_NOW;
 CREATE FUNCTION  FUN_NOW()
  RETURNS DATETIME
-BEGIN 
+BEGIN
 RETURN now();
 END;
 
 
 -- 时间函数
-
+DROP FUNCTION if exists FUN_DATE_ADD;
 CREATE FUNCTION `FUN_DATE_ADD`(STR_DATE VARCHAR(10), STR_INTERVAL INTEGER) RETURNS DATE
 BEGIN
      RETURN date_add(STR_DATE, INTERVAL STR_INTERVAL DAY);
@@ -663,12 +668,8 @@ END;
 
 
 
-
-
-
 -- -----------------------------------------------------------------------------------------------------------------------------------
 --                                   注意：该脚本运行在mysql环境下，如果是其他数据库，如有需要请先修改，再执行。                    --
---                                                                                           编写人：沈佳龙   （www.roncoo.com）    --
 -- -----------------------------------------------------------------------------------------------------------------------------------
 
 drop table if exists pms_menu;
@@ -709,8 +710,6 @@ create table pms_menu
 
 alter table pms_menu comment '菜单表';
 
-
-alter table pms_menu comment '菜单表';
 
 create table pms_menu_role
 (
@@ -852,7 +851,7 @@ alter table pms_role_permission comment '权限与角色关联表';
 -- ------------------------------step 1  菜单-------------------------------------------------
 -- 菜单初始化数据
 --  -- 菜单的初始化数据
-insert into pms_menu (id,version,status,creater,create_time, editor, edit_time, remark, name, url, number, is_leaf, level, parent_id, target_name) values 
+insert into pms_menu (id,version,status,creater,create_time, editor, edit_time, remark, name, url, number, is_leaf, level, parent_id, target_name) values
 (1,0, 'ACTIVE','roncoo','2016-06-03 11:07:43', 'admin','2016-06-03 11:07:43', '', '权限管理', '##', '001', 'NO', 1, 0, '#'),
 (2,0, 'ACTIVE','roncoo','2016-06-03 11:07:43', 'admin','2016-06-03 11:07:43', '', '菜单管理', 'pms/menu/list', '00101', 'YES', 2, 1, 'cdgl'),
 (3,0, 'ACTIVE','roncoo','2016-06-03 11:07:43', 'admin','2016-06-03 11:07:43', '', '权限管理', 'pms/permission/list', '00102', 'YES',2, 1, 'qxgl'),
@@ -887,7 +886,7 @@ insert into pms_menu (id,version,status,creater,create_time, editor, edit_time, 
 -- 权限功能点的初始化数据
 
 
-insert into pms_permission (id,version,status,creater,create_time, editor, edit_time, remark, permission_name, permission) values 
+insert into pms_permission (id,version,status,creater,create_time, editor, edit_time, remark, permission_name, permission) values
  (1, 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'test', '2016-06-03 11:07:43','权限管理-菜单-查看','权限管理-菜单-查看','pms:menu:view'),
  (2, 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'test', '2016-06-03 11:07:43','权限管理-菜单-添加','权限管理-菜单-添加','pms:menu:add'),
  (3, 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'test', '2016-06-03 11:07:43','权限管理-菜单-查看','权限管理-菜单-修改','pms:menu:edit'),
@@ -971,19 +970,19 @@ insert into pms_permission (id,version,status,creater,create_time, editor, edit_
 -- -----------------------------------step3：操作员--------------------------------------------
 -- -- 操作员的初始化数据
 --  admin 超级管理员
-insert into pms_operator (id,version,status,creater,create_time, editor, edit_time, remark, login_name, login_pwd,real_name,mobile_no,type,salt) 
+insert into pms_operator (id,version,status,creater,create_time, editor, edit_time, remark, login_name, login_pwd,real_name,mobile_no,type,salt)
 values (1, 0, 'ACTIVE','roncoo','2016-06-03 11:07:43', 'admin','2016-06-03 11:07:43', '超级管理员', 'admin', 'd3c59d25033dbf980d29554025c23a75','超级管理员', '18620936193', 'ADMIN','8d78869f470951332959580424d4bf4f');
 
 --  guest  游客
-insert into pms_operator (id,version,status,creater,create_time, editor, edit_time, remark, login_name, login_pwd,real_name,mobile_no,type,salt) 
+insert into pms_operator (id,version,status,creater,create_time, editor, edit_time, remark, login_name, login_pwd,real_name,mobile_no,type,salt)
 values (2, 0, 'ACTIVE','roncoo','2016-06-03 11:07:43', 'guest','2016-06-03 11:07:43', '游客', 'guest', '3f0dbf580ee39ec03b632cb33935a363','游客', '18926215592', 'USER','183d9f2f0f2ce760e98427a5603d1c73');
 
 -- ------------------------------------step4：角色-------------------------------------------
 -- -- 角色的初始化数据
-insert into pms_role (id,version,status,creater,create_time, editor, edit_time, remark, role_code, role_name) 
+insert into pms_role (id,version,status,creater,create_time, editor, edit_time, remark, role_code, role_name)
 values (1, 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'admin', '2016-06-03 11:07:43','超级管理员角色','admin', '超级管理员角色');
 
-insert into pms_role (id,version,status,creater,create_time, editor, edit_time, remark, role_code, role_name) 
+insert into pms_role (id,version,status,creater,create_time, editor, edit_time, remark, role_code, role_name)
 values (2, 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'guest', '2016-06-03 11:07:43','游客角色','guest', '游客角色');
 
 -- ------------------------------------step5：操作员和角色关联-------------------------------------------
@@ -1000,12 +999,12 @@ insert into pms_role_operator (id,version,status,creater,create_time, editor, ed
 -- -- 角色与用户功能点关联的初始化数据
 
 -- admin（拥有所有的权限点）
-insert into pms_role_permission  (role_id, permission_id) select 1,id from PMS_PERMISSION;
+insert into pms_role_permission  (role_id, permission_id) select 1,id from pms_permission;
 
 
 -- guest （只有所有的查看权限）
-insert into pms_role_permission (version,status,creater,create_time, editor, edit_time, remark,role_id,permission_id) 
-values 
+insert into pms_role_permission (version,status,creater,create_time, editor, edit_time, remark,role_id,permission_id)
+values
  ( 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'test', '2016-06-03 11:07:43','',2,1),
  ( 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'test', '2016-06-03 11:07:43','',2,11),
  ( 0,'ACTIVE', 'roncoo','2016-06-03 11:07:43', 'test', '2016-06-03 11:07:43','',2,21),
@@ -1028,15 +1027,15 @@ values
 --  角色与信息关联初始化数据
 -- admin
 
-insert into pms_menu_role(role_id, menu_id) select 1,id from PMS_MENU;
+insert into pms_menu_role(role_id, menu_id) select 1,id from pms_menu;
 
 -- guest  所有的菜单（只有查看权限）
-insert into pms_menu_role (role_id, menu_id) select 2,id from PMS_MENU;
+insert into pms_menu_role (role_id, menu_id) select 2,id from pms_menu;
 
 -- 2016.8.5 第三方支付信息表增加支付宝线下产品字段
 alter table rp_user_pay_info add offline_app_id varchar(50);
 alter table rp_user_pay_info add rsa_private_key varchar(100);
-alter table rp_user_pay_info add rsa_public_key varchar(100); 
+alter table rp_user_pay_info add rsa_public_key varchar(100);
 
 -- 2016.9.5 增加登录信息字段
 alter table rp_user_info add mobile varchar(15);
